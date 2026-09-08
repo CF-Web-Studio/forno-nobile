@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Forno Nobile — Showcase CF Web Studio</title>
+<meta name="description" content="Três níveis de presença digital para a mesma marca fictícia: Essencial, Profissional e Premium. Demonstração da CF Web Studio." />
+<meta name="robots" content="noindex" />
+<style>
+  :root{color-scheme:light dark}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#141009;color:#f4ead6;font-family:'Helvetica Neue',Arial,sans-serif;padding:2rem}
+  .wrap{max-width:760px;text-align:center}
+  h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:.4rem}
+  p{color:rgba(244,234,214,.7);margin-bottom:2.5rem}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;text-align:left}
+  a.tier{display:block;border:1px solid rgba(244,234,214,.18);border-radius:14px;padding:1.5rem;text-decoration:none;color:inherit;transition:transform .3s ease,border-color .3s ease}
+  a.tier:hover{transform:translateY(-4px);border-color:#e2793f}
+  a.tier span.label{display:block;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#e2793f;margin-bottom:.5rem}
+  a.tier strong{font-family:Georgia,serif;font-size:1.2rem;display:block;margin-bottom:.4rem}
+  a.tier small{color:rgba(244,234,214,.6);font-size:.82rem}
+  footer{margin-top:3rem;font-size:.75rem;color:rgba(244,234,214,.5)}
+  footer a{color:#e2793f;text-decoration:none}
+  @media (max-width:700px){.tiers{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Forno Nobile</h1>
+    <p>Uma marca fictícia, três níveis de presença digital. Escolha uma versão para explorar.</p>
+    <div class="tiers">
+      <a class="tier" href="./essencial/"><span class="label">Nível 1</span><strong>Essencial</strong><small>Presença digital correta e bem feita.</small></a>
+      <a class="tier" href="./profissional/"><span class="label">Nível 2</span><strong>Profissional</strong><small>Direção visual forte, storytelling, motion moderado.</small></a>
+      <a class="tier" href="./premium/"><span class="label">Nível 3</span><strong>Premium</strong><small>Experiência autoral em 3D e narrativa de scroll.</small></a>
+    </div>
+    <footer>Projeto conceitual — demonstração da <a href="https://cf-web-studio.github.io/" target="_blank" rel="noopener">CF Web Studio</a>.</footer>
+  </div>
+</body>
+</html>

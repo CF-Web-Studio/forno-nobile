@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Forno Nobile — Experiência Premium</title>
+<meta name="description" content="Forno Nobile: da matéria-prima ao fogo, uma experiência digital autoral sobre pizza napolitana. Showcase da CF Web Studio." />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%230a0806%22/><circle cx=%2216%22 cy=%2216%22 r=%2210%22 fill=%22none%22 stroke=%22%23e2793f%22 stroke-width=%222%22/></svg>" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#cardapio">Pular experiência e ir ao cardápio</a>
+
+<header class="site-header" id="site-header">
+  <div class="container">
+    <a class="brand" href="#topo">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="none" stroke="#e2793f" stroke-width="2"/><circle cx="24" cy="24" r="12" fill="none" stroke="#f4ead6" stroke-width="1"/></svg>
+      <span class="brand-name">Forno Nobile<small>Experiência Premium</small></span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <ul class="nav-desktop">
+        <li><a href="#experiencia">Experiência</a></li>
+        <li><a href="#cardapio">Cardápio</a></li>
+        <li><a href="#localizacao">Localização</a></li>
+        <li><a href="#reservas">Reservas</a></li>
+      </ul>
+    </nav>
+    <div class="header-cta">
+      <a class="btn btn-primary" href="#reservas">Reservar mesa</a>
+      <button class="menu-toggle" id="menu-toggle" aria-expanded="false" aria-controls="nav-mobile" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="container">
+    <ul class="nav-mobile" id="nav-mobile">
+      <li><a href="#experiencia">Experiência</a></li>
+      <li><a href="#cardapio">Cardápio</a></li>
+      <li><a href="#localizacao">Localização</a></li>
+      <li><a href="#reservas" class="btn btn-primary" style="margin-top:.5rem;justify-content:center">Reservar mesa</a></li>
+    </ul>
+  </div>
+</header>
+
+<div class="narrative" id="topo">
+  <div id="stage-wrap" aria-hidden="true">
+    <canvas id="scene-canvas"></canvas>
+    <div class="stage-fallback" id="stage-fallback" hidden>
+      <svg viewBox="0 0 400 400"><circle cx="200" cy="200" r="150" fill="none" stroke="#e2793f" stroke-width="1.5"/><circle cx="200" cy="200" r="110" fill="#c2532c"/><circle cx="200" cy="200" r="96" fill="#e2793f"/></svg>
+    </div>
+    <svg class="blueprint-overlay" id="blueprint-overlay" viewBox="0 0 600 600" aria-hidden="true">
+      <circle cx="300" cy="300" r="200" fill="none" stroke="#7fb4d9" stroke-width="1" stroke-dasharray="4 6"/>
+      <line x1="100" y1="300" x2="500" y2="300" stroke="#7fb4d9" stroke-width="1"/>
+      <line x1="300" y1="100" x2="300" y2="500" stroke="#7fb4d9" stroke-width="1"/>
+      <line x1="100" y1="330" x2="500" y2="330" stroke="#7fb4d9" stroke-width="1"/>
+      <text x="300" y="360" fill="#7fb4d9" font-family="Helvetica Neue, Arial, sans-serif" font-size="13" text-anchor="middle">Ø 30cm</text>
+      <text x="300" y="90" fill="#7fb4d9" font-family="Helvetica Neue, Arial, sans-serif" font-size="13" text-anchor="middle">borda 2cm</text>
+      <text x="300" y="520" fill="#7fb4d9" font-family="Helvetica Neue, Arial, sans-serif" font-size="13" text-anchor="middle">450°C · 90s</text>
+      <text x="300" y="540" fill="#7fb4d9" font-family="Helvetica Neue, Arial, sans-serif" font-size="13" text-anchor="middle">hidratação 62%</text>
+    </svg>
+    <div class="hero-scroll"><span>Role para explorar</span><span class="line"><span></span></span></div>
+  </div>
+
+  <div class="narrative-panels" id="experiencia">
+    <section class="narrative-panel align-left" data-panel="0">
+      <div class="container">
+        <div class="panel-inner" data-reveal>
+          <span class="hero-eyebrow">Forno Nobile — showcase autoral</span>
+          <h2 class="hero-title">Matéria-prima<br /><em>em estado bruto.</em></h2>
+          <p>Tudo começa antes da massa: farinha, água, fogo. Uma experiência digital construída em torno da transformação que acontece dentro do forno.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="#reservas">Reservar mesa</a><a class="btn btn-ghost" href="#cardapio">Ver cardápio</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="narrative-panel align-right" data-panel="1">
+      <div class="container">
+        <div class="panel-inner" data-reveal>
+          <span class="panel-index">01 — Massa</span>
+          <h2>O desenho técnico<br />da massa perfeita.</h2>
+          <p>Diâmetro de 30cm, espessura de borda de 2cm, hidratação de 62%. Cada pizza napolitana segue uma proporção quase arquitetônica.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="narrative-panel align-left" data-panel="2">
+      <div class="container">
+        <div class="panel-inner" data-reveal>
+          <span class="panel-index">02 — Ingrediente</span>
+          <h2>Cada camada,<br />separada no ar.</h2>
+          <p>Molho, muçarela, manjericão e massa — decompostos, para que você veja exatamente o que compõe cada receita.</p>
+          <div class="ingredient-picker" role="group" aria-label="Escolher receita">
+            <button class="ingredient-chip" data-recipe="margherita" aria-pressed="true">Margherita</button>
+            <button class="ingredient-chip" data-recipe="diavola" aria-pressed="false">Diavola</button>
+            <button class="ingredient-chip" data-recipe="prosciutto" aria-pressed="false">Prosciutto</button>
+            <button class="ingredient-chip" data-recipe="quattro" aria-pressed="false">Quattro Formaggi</button>
+          </div>
+          <p class="ingredient-note" id="ingredient-note" aria-live="polite">Margherita — molho San Marzano, fior di latte, manjericão fresco.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="narrative-panel align-center" data-panel="3">
+      <div class="container">
+        <div class="panel-inner" data-reveal>
+          <span class="panel-index">03 — Fogo</span>
+          <h2>450°C.<br />90 segundos de verdade.</h2>
+          <p>O calor do forno de barro é o que separa massa crua de pizza napolitana — e o momento mais intenso da experiência.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="narrative-panel align-right" data-panel="4">
+      <div class="container">
+        <div class="panel-inner" data-reveal>
+          <span class="panel-index">04 — Transformação</span>
+          <h2>As camadas se<br />reencontram.</h2>
+          <p>Do desenho técnico ao produto: ingredientes se aproximam, se alinham e se tornam uma única pizza.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="narrative-panel align-left" data-panel="5">
+      <div class="container">
+        <div class="panel-inner" data-reveal>
+          <span class="panel-index">05 — Pizza</span>
+          <h2>O resultado,<br />finalmente inteiro.</h2>
+          <p>Uma pizza napolitana autoral, construída na tela do jeito que é construída no forno: com processo.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="narrative-panel align-center" data-panel="6">
+      <div class="container">
+        <div class="panel-inner" data-reveal>
+          <span class="panel-index">06 — Experiência</span>
+          <h2>Isso é o que a CF Web Studio<br />constrói para marcas de verdade.</h2>
+          <p>Este showcase é um projeto conceitual — uma demonstração de até onde uma experiência digital pode ir quando é pensada como narrativa.</p>
+          <div class="hero-actions" style="justify-content:center"><a class="btn btn-primary" href="#reservas">Reservar mesa</a></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<section class="regular" id="stills">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Still frames</span>
+      <h2>Imagens 3D estáticas, geradas na mesma linguagem</h2>
+    </div>
+    <div class="stills-grid">
+      <div class="still-card" data-reveal><canvas class="still-canvas" data-still="crust"></canvas><p class="still-caption">Borda em close, luz lateral</p></div>
+      <div class="still-card" data-reveal><canvas class="still-canvas" data-still="top"></canvas><p class="still-caption">Vista superior, composição</p></div>
+      <div class="still-card" data-reveal><canvas class="still-canvas" data-still="fire"></canvas><p class="still-caption">Atmosfera do forno</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="regular" id="cardapio">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Cardápio</span>
+      <h2>A seleção da casa</h2>
+    </div>
+    <div class="menu-list">
+      <div class="menu-row" data-reveal><div><h4>Margherita</h4><p>Molho San Marzano, fior di latte, manjericão, azeite extravirgem.</p></div><span class="price">R$ 62</span></div>
+      <div class="menu-row" data-reveal><div><h4>Diavola</h4><p>Molho de tomate, muçarela, calabresa artesanal, pimenta biquinho.</p></div><span class="price">R$ 68</span></div>
+      <div class="menu-row" data-reveal><div><h4>Prosciutto e Funghi</h4><p>Molho de tomate, muçarela, presunto parma, cogumelos salteados.</p></div><span class="price">R$ 76</span></div>
+      <div class="menu-row" data-reveal><div><h4>Quattro Formaggi</h4><p>Muçarela, gorgonzola, parmesão, provolone, mel silvestre.</p></div><span class="price">R$ 73</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="regular" id="localizacao">
+  <div class="container">
+    <div class="section-head" data-reveal>
+      <span class="eyebrow">Localização</span>
+      <h2>Onde a experiência acontece de verdade</h2>
+    </div>
+    <p data-reveal>Rua das Oliveiras, 128 — Vila das Oliveiras, São Paulo/SP · Terça a domingo, a partir das 18h30 (sábado e domingo, a partir do meio-dia).</p>
+    <a class="btn btn-ghost" data-reveal href="https://www.google.com/maps/search/?api=1&query=Rua+das+Oliveiras+128+Sao+Paulo" target="_blank" rel="noopener">Ver no mapa</a>
+  </div>
+</section>
+
+<section class="regular reservas" id="reservas">
+  <div class="wide">
+    <div>
+      <span class="eyebrow">Reservas</span>
+      <h2>Garanta sua mesa</h2>
+      <form id="reserva-form" novalidate>
+        <div class="form-field"><label for="nome">Nome</label><input id="nome" name="nome" type="text" required autocomplete="name" /></div>
+        <div class="form-field"><label for="pessoas">Número de pessoas</label><input id="pessoas" name="pessoas" type="number" min="1" max="20" value="2" required /></div>
+        <div class="form-field"><label for="data">Data</label><input id="data" name="data" type="date" required /></div>
+        <div class="form-field"><label for="horario">Horário</label>
+          <select id="horario" name="horario" required>
+            <option value="19h">19h</option><option value="19h30">19h30</option><option value="20h">20h</option><option value="20h30">20h30</option><option value="21h">21h</option>
+          </select>
+        </div>
+        <div class="form-field"><label for="mensagem">Mensagem (opcional)</label><textarea id="mensagem" name="mensagem"></textarea></div>
+        <button class="btn btn-primary" type="submit">Enviar pelo WhatsApp</button>
+      </form>
+    </div>
+    <div class="reservas-info">
+      <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s7-7.5 7-12a7 7 0 10-14 0c0 4.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg><div><h4>Endereço</h4><p>Rua das Oliveiras, 128 — Vila das Oliveiras, São Paulo/SP</p></div></div>
+      <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><div><h4>Horários</h4><p>Terça a sexta 18h30–23h · Sábado 12h–23h · Domingo 12h–22h</p></div></div>
+      <div class="item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.12.9.33 1.77.63 2.61a2 2 0 01-.45 2.11L8.09 9.63a16 16 0 006.28 6.28l1.19-1.19a2 2 0 012.11-.45c.84.3 1.71.51 2.61.63A2 2 0 0122 16.92z"/></svg><div><h4>Telefone / WhatsApp</h4><p>(11) 4321-0198</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <span class="brand-name" style="font-family:'Helvetica Neue',Arial,sans-serif;font-weight:700">Forno Nobile</span>
+      <ul class="footer-links"><li><a href="#cardapio">Cardápio</a></li><li><a href="#reservas">Reservas</a></li></ul>
+    </div>
+    <p class="demo-note">Forno Nobile é um projeto conceitual — showcase autoral da <a href="https://cf-web-studio.github.io/" target="_blank" rel="noopener">CF Web Studio</a>. Nível <strong>Premium</strong>.</p>
+  </div>
+</footer>
+
+<a class="whatsapp-fab" href="https://wa.me/5511432101980" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.39 1.26 4.81L2 22l5.42-1.36a9.86 9.86 0 004.62 1.16h.01c5.46 0 9.9-4.45 9.9-9.9C21.95 6.45 17.5 2 12.04 2zm5.8 14.06c-.24.68-1.4 1.3-1.93 1.36-.5.06-1.08.28-3.6-.75-3.03-1.25-4.98-4.32-5.13-4.53-.15-.2-1.22-1.62-1.22-3.1 0-1.47.77-2.19 1.05-2.49.27-.29.6-.36.8-.36.2 0 .4 0 .58.01.18.01.44-.07.68.52.25.6.85 2.07.92 2.22.07.15.12.32.02.52-.1.2-.15.32-.3.5-.15.17-.31.39-.44.52-.15.15-.3.31-.13.6.17.3.76 1.25 1.63 2.02 1.12 1 2.06 1.31 2.36 1.46.3.15.47.13.65-.08.18-.2.75-.87.95-1.17.2-.3.4-.25.68-.15.27.1 1.73.82 2.02 .97.3.15.5.22.57.35.07.13.07.75-.17 1.43z"/></svg>
+</a>
+
+<div class="sr-status" id="sr-status" aria-live="polite"></div>
+
+<script type="module" src="script.js"></script>
+</body>
+</html>
