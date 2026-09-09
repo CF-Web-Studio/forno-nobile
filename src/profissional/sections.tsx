@@ -13,8 +13,47 @@ const M = "/forno-nobile/media/profissional";
 /* ------------------------------- HERO ------------------------------- */
 export function Hero() {
   return (
+    /* Capa editorial em split: a página é dividida por uma linha vertical dura,
+       tipografia de masthead de um lado, imagem do outro. Território próprio —
+       o Essencial põe o tipo SOBRE a foto, o Premium usa banda contida no
+       escuro (§27). E metade de 1440 são 720 px, dentro do teto de 1280. */
     <section className="p-hero" id="topo">
-      <div className="p-hero__media">
+      <div className="p-hero__type">
+        <div className="p-hero__typeInner">
+          <Reveal>
+            <p className="p-hero__issue">
+              <span>Forno Nobile</span>
+              <span aria-hidden="true">—</span>
+              <span>Campanha 01</span>
+            </p>
+            <div className="overline-rule" />
+          </Reveal>
+          <Reveal stagger={0.08}>
+            <h1 className="p-hero__title">
+              Poucos ingredientes.
+              <br />
+              <em>Nenhum atalho.</em>
+            </h1>
+          </Reveal>
+          <Reveal className="p-hero__meta" delay={0.1}>
+            <p>
+              Uma pizzaria napolitana construída em torno de três decisões: a
+              massa, o forno e o tempo.
+            </p>
+            <div className="p-hero__actions">
+              <MagneticButton className="btn" href="#reservas" onClick={anchorHandler("#reservas")}>
+                Reservar mesa
+              </MagneticButton>
+              <a className="btn btn-line" href="#processo" onClick={anchorHandler("#processo")}>
+                Ver o processo
+              </a>
+            </div>
+          </Reveal>
+        </div>
+        <span className="p-hero__scrollcue">Role</span>
+      </div>
+
+      <figure className="p-hero__plate">
         <SmartVideo
           src={`${M}/videos/hero.mp4`}
           poster={`${M}/videos/hero-poster.jpg`}
@@ -23,36 +62,8 @@ export function Hero() {
           playWhenVisible={false}
           objectPosition="center 55%"
         />
-        <div className="p-hero__scrim" />
-      </div>
-
-      <div className="wrap p-hero__inner">
-        <Reveal className="p-hero__eyebrow">
-          <span className="eyebrow">Forno Nobile · campanha</span>
-        </Reveal>
-        <Reveal stagger={0.08}>
-          <h1 className="p-hero__title">
-            Poucos ingredientes.
-            <br />
-            <em>Nenhum atalho.</em>
-          </h1>
-        </Reveal>
-        <Reveal className="p-hero__meta" delay={0.1}>
-          <p>
-            Uma pizzaria napolitana construída em torno de três decisões: a
-            massa, o forno e o tempo.
-          </p>
-          <div className="p-hero__actions">
-            <MagneticButton className="btn" href="#reservas" onClick={anchorHandler("#reservas")}>
-              Reservar mesa
-            </MagneticButton>
-            <a className="btn btn-line" href="#processo" onClick={anchorHandler("#processo")}>
-              Ver o processo
-            </a>
-          </div>
-        </Reveal>
-      </div>
-      <span className="p-hero__scrollcue">Role</span>
+        <figcaption className="p-hero__cap">Salão — hora do serviço</figcaption>
+      </figure>
     </section>
   );
 }
@@ -223,28 +234,32 @@ export function Produtos() {
 /* -------------------------- CAMPANHA / OUTDOOR -------------------------- */
 export function Campanha() {
   return (
-    <section className="campanha" aria-label="Campanha">
-      <Parallax className="campanha__bg" depth="background" distance={120}>
-        <Picture
-          base={`${M}/images/outdoor-cidade`}
-          alt="Painel publicitário gigante da Forno Nobile em um prédio, ao entardecer, com trânsito passando"
-          widths={[768, 1280, 1920]}
-          sizes="100vw"
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-        />
-      </Parallax>
-      <div className="campanha__scrim" />
-      <div className="wrap">
-        <Reveal stagger={0.08}>
-          <span className="eyebrow" style={{ color: "var(--color-gold)" }}>
-            Na cidade
-          </span>
-          <h2 className="campanha__title">A mesma pizza que está no forno está no outdoor.</h2>
-          <p className="campanha__lead">
-            Nada de foto de banco de imagem. O que aparece na campanha sai da
-            mesma cozinha, no mesmo dia.
-          </p>
-        </Reveal>
+    <section aria-label="Campanha">
+      <div className="wrap campanha">
+        <Parallax className="campanha__bg" depth="background" distance={60}>
+          <Picture
+            base={`${M}/images/outdoor-cidade`}
+            alt="Painel publicitário gigante da Forno Nobile em um prédio, ao entardecer, com trânsito passando"
+            /* sem 1920: é upscale de uma fonte de 1280 (ASSET-AUDIT) */
+            widths={[768, 1280]}
+            sizes="(min-width: 900px) 56vw, 92vw"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+          <div className="campanha__scrim" />
+        </Parallax>
+
+        <div>
+          <Reveal stagger={0.08}>
+            <span className="eyebrow" style={{ color: "var(--color-gold)" }}>
+              Na cidade
+            </span>
+            <h2 className="campanha__title">A mesma pizza que está no forno está no outdoor.</h2>
+            <p className="campanha__lead">
+              Nada de foto de banco de imagem. O que aparece na campanha sai da
+              mesma cozinha, no mesmo dia.
+            </p>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
