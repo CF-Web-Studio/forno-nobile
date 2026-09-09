@@ -261,206 +261,159 @@ p {
 }
 
 /* ================================================================ *
- * A MONTAGEM — visor de ingredientes + match-cut para o produto real
- * Ver src/premium/Assembly.tsx para o porquê de não haver empilhamento.
+ * A MONTAGEM — convergencia scrubada pelo scroll
+ * Ver src/premium/Assembly.tsx para o porque de nao haver composicao.
  * ================================================================ */
 .assembly {
   position: relative;
-  background: radial-gradient(120% 60% at 50% 30%, #171210 0%, var(--color-void) 70%);
+  background:
+    radial-gradient(90% 55% at 50% 42%, #1b1310 0%, var(--color-void) 68%),
+    var(--color-void);
 }
 .assembly__stage {
   position: relative;
   min-height: 100svh;
   display: grid;
-  grid-template-rows: auto 1fr auto;
-  gap: clamp(1.5rem, 4vh, 3rem);
+  /* linhas por conteudo, nao 1fr: com uma faixa elastica a moldura subia e
+     sobrava um vazio enorme embaixo. */
+  grid-template-rows: auto auto auto;
   align-content: center;
-  padding-block: clamp(4rem, 10vh, 7rem);
+  justify-items: center;
+  gap: clamp(1.6rem, 4vh, 3rem);
+  padding-block: clamp(4rem, 9vh, 6.5rem);
   overflow: hidden;
 }
-.assembly__intro {
+.assembly__head {
+  width: min(92vw, 46rem);
   text-align: center;
-  width: min(92vw, 44rem);
-  margin-inline: auto;
 }
-.assembly__intro h2 {
-  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
+.assembly__head h2 {
   margin-top: 0.6rem;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.02;
+  text-wrap: balance;
 }
 
-/* O visor: no desktop os frames se empilham no MESMO espaço (um por vez);
-   no mobile viram fluxo normal. */
-.assembly__viewport {
-  position: relative;
-  width: min(92vw, 62rem);
-  margin-inline: auto;
-  display: grid;
-}
-.assembly__frame,
-.assembly__final {
-  grid-area: 1 / 1;
-}
-.assembly__frame {
-  display: grid;
-  grid-template-columns: 1fr;
-  align-items: center;
-  gap: clamp(1rem, 3vw, 2.5rem);
+/* Composicao editorial: a moldura NAO carrega o texto por cima. O plano e o
+   assunto — cobrir a base da pizza com scrim desperdicava justamente o que a
+   secao quer mostrar. No desktop a legenda vive ao lado. */
+.assembly__body {
+  position: relative; /* ancora a legenda quando ela volta para dentro no mobile */
   margin: 0;
-  will-change: opacity, transform;
+  display: grid;
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+  align-items: center;
+  width: min(92vw, 1280px);
 }
-@media (min-width: 768px) {
-  .assembly__frame {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+@media (min-width: 1024px) {
+  .assembly__body {
+    grid-template-columns: auto minmax(15rem, 22rem);
   }
 }
-/* Teto de nitidez: a fonte tem 1254 px reais. Em DPR 2 o limite é
-   1254 x 1.15 / 2 = 721 px (ver ASSET-AUDIT.md). */
-.assembly__shot {
-  width: 100%;
-  max-width: 34rem;
-  height: auto;
-  justify-self: center;
-  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.55));
-  user-select: none;
-  -webkit-user-drag: none;
+
+/* A moldura: o plano tem 1280 de largura real, entao o teto e
+   larguraCSS x DPR <= 1280 x 1.15 (ASSET-AUDIT.md) => 736 px em DPR 2.
+   Contido e cercado de escuro le como galeria, nao como imagem pequena — e
+   evita exatamente o "zoom que piora a imagem". */
+.assembly__frame {
+  position: relative;
+  margin: 0;
+  width: min(92vw, 1472px);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 2px;
+  will-change: clip-path, transform;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(243, 233, 218, 0.06);
 }
 @media (min-resolution: 1.5dppx) {
-  .assembly__shot {
-    max-width: 700px;
+  .assembly__frame {
+    width: min(92vw, 736px);
   }
 }
-.assembly__meta {
-  max-width: 26rem;
+.assembly__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Legenda dentro da moldura, sobre scrim proprio: texto sobre midia nao pode
+   depender do quadro que o video estiver mostrando (§39). */
+.assembly__caption {
+  position: relative;
+  padding: 0;
+  background: none;
+  text-align: left;
+  align-self: center;
 }
 .assembly__n {
   display: block;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
   color: var(--color-ember-2);
 }
 .assembly__name {
-  font-size: clamp(1.5rem, 3vw, 2.1rem);
-  line-height: 1.05;
-  margin: 0.5rem 0 0.8rem;
+  margin: 0.4rem 0 0.7rem;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  line-height: 1.04;
+  color: var(--color-cream);
 }
 .assembly__line {
-  font-size: 1.05rem;
+  max-width: 34ch;
+  font-size: 1.02rem;
   line-height: 1.55;
   color: var(--color-cream-dim);
 }
-
-/* O corte para o produto real. */
-/* macro.mp4 tem 1280 de largura real. O frame do clímax nunca passa do que a
-   fonte sustenta: larguraCSS x DPR <= 1280 x 1.15 (ASSET-AUDIT.md). Em DPR 2
-   isso são 736 px; em DPR 1, 1472. A mídia contida é decisão de direção de
-   arte, não limitação escondida. */
-/* O teto já desconta o push-in de 1.06 do match-cut: o pico do movimento
-   (max-width x 1.06) precisa caber no limite, não só o estado em repouso.
-   DPR 1: 1388 x 1.06 = 1471. DPR 2: 694 x 1.06 = 736. */
-.assembly__final {
-  position: relative;
-  width: 100%;
-  max-width: 1388px;
-  margin-inline: auto;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  will-change: opacity, clip-path, transform;
-}
-@media (min-resolution: 1.5dppx) {
-  .assembly__final {
-    max-width: 694px;
+/* Abaixo de 1024 a legenda volta para dentro da moldura, com scrim proprio:
+   em coluna unica ela ficaria solta embaixo de um plano de 4/5. */
+@media (max-width: 1023px) {
+  .assembly__caption {
+    position: absolute;
+    inset: auto 0 0 0;
+    padding: clamp(3.5rem, 12vw, 5rem) clamp(1.1rem, 4vw, 1.6rem) clamp(1rem, 3vw, 1.4rem);
+    background: linear-gradient(to top, rgba(6, 4, 3, 0.94) 0%, rgba(6, 4, 3, 0.66) 46%, transparent 100%);
+  }
+  .assembly__name {
+    color: #fff;
+  }
+  .assembly__line {
+    color: #d9cfc0;
   }
 }
-/* Scrim: texto sobre mídia não pode depender do que o frame do vídeo mostra.
-   Garante o contraste independentemente do conteúdo por baixo (§39). */
-.assembly__final::after {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 45%;
-  background: linear-gradient(to top, rgba(6, 4, 3, 0.92) 0%, rgba(6, 4, 3, 0.72) 42%, transparent 100%);
-  pointer-events: none;
-}
-.assembly__payoff {
-  z-index: 1;
-  position: absolute;
-  left: clamp(1rem, 3vw, 2.5rem);
-  bottom: clamp(1rem, 3vw, 2.5rem);
-  right: clamp(1rem, 3vw, 2.5rem);
-  font-family: var(--font-serif);
-  font-size: clamp(1.1rem, 2.4vw, 1.7rem);
-  line-height: 1.3;
-  color: #fff;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
-}
-.assembly__payoff em {
-  font-style: normal;
-  color: var(--color-ember-2);
-}
-
-/* Progresso — redundante com .assembly__live, nunca a única fonte (§39). */
 .assembly__ticks {
   display: flex;
   gap: 0.5rem;
   justify-content: center;
-  align-items: center;
   list-style: none;
   padding: 0;
   margin: 0;
 }
 .assembly__ticks li {
-  width: 1.6rem;
+  width: 2.2rem;
   height: 2px;
   background: var(--color-hair);
   transition: background var(--mo-micro) var(--mo-ease-out);
 }
 .assembly__ticks li.is-on {
-  background: var(--color-cream);
-}
-.assembly__ticks li.is-final {
-  width: 2.6rem;
-}
-.assembly__ticks li.is-final.is-on {
   background: var(--color-ember-2);
 }
 .assembly__live {
   text-align: center;
   font-family: var(--font-display);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--color-cream-dim);
 }
 
-/* Mobile: fluxo normal, nada empilhado, nada preso. */
 @media (max-width: 767px) {
-  .assembly__viewport {
-    display: block;
-  }
-  /* O nome vem ANTES da imagem no mobile. Com legenda embaixo, a imagem
-     seguinte entra na tela junto e o leitor casa a legenda com a foto errada.
-     A ordem do DOM continua img → figcaption (correto para leitor de tela). */
-  .assembly__meta {
-    order: -1;
+  .assembly__stage {
+    min-height: 0;
   }
   .assembly__frame {
-    display: flex;
-    flex-direction: column;
-    /* respiro entre ingredientes >> respiro interno, para agrupar por Gestalt */
-    margin-bottom: clamp(5rem, 16vh, 8rem);
-    gap: 1.25rem;
-  }
-  .assembly__frame,
-  .assembly__final {
-    grid-area: auto;
-  }
-  .assembly__final {
     aspect-ratio: 4 / 5;
-  }
-  .assembly__ticks {
-    display: none;
   }
 }
 
