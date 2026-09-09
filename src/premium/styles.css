@@ -246,6 +246,9 @@ p {
 .m-drawer .btn {
   margin-top: 1.2rem;
   justify-content: center;
+  /* `.m-drawer a` (0,2,0) vence `.btn` (0,1,0) e pintava o CTA de creme sobre
+     o ember: 4.23:1, abaixo de AA. Em branco são 5.09:1. */
+  color: #fff;
 }
 @media (max-width: 920px) {
   .m-nav,
@@ -255,78 +258,6 @@ p {
   .m-burger {
     display: flex;
   }
-}
-
-/* ================================================================ *
- * HERO
- * ================================================================ */
-.m-hero {
-  position: relative;
-  min-height: max(680px, 100svh);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: hidden;
-  isolation: isolate;
-}
-.m-hero__media {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-.m-hero__media > * {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.m-hero__scrim {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(120% 80% at 70% 40%, rgba(12, 9, 8, 0) 0%, rgba(12, 9, 8, 0.65) 70%, rgba(12, 9, 8, 0.92) 100%),
-    linear-gradient(0deg, rgba(12, 9, 8, 0.95) 0%, rgba(12, 9, 8, 0.1) 55%);
-}
-.m-hero__inner {
-  position: relative;
-  text-align: center;
-  padding-block: 8rem;
-}
-.m-hero__title {
-  font-size: clamp(2.8rem, 9vw, 7rem);
-  line-height: 0.94;
-  text-wrap: balance;
-  margin: 1.4rem auto 0;
-  max-width: 14ch;
-}
-.m-hero__title em {
-  font-style: normal;
-  color: var(--color-ember-2);
-}
-.m-hero__sub {
-  margin: 1.8rem auto 0;
-  max-width: 40ch;
-  color: var(--color-cream-dim);
-  font-size: 1.15rem;
-}
-.m-hero__actions {
-  margin-top: 2.2rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.m-hero__cue {
-  position: absolute;
-  left: 50%;
-  bottom: 2rem;
-  translate: -50% 0;
-  font-family: var(--font-display);
-  font-size: 0.64rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--color-cream-dim);
 }
 
 /* ================================================================ *
@@ -543,11 +474,44 @@ p {
   align-items: center;
   overflow: hidden;
   isolation: isolate;
+  background: var(--color-void);
 }
-.fogo__media {
+/* Calor sem resolucao: o brilho de brasa e gradiente puro, entao cobre o
+   quadro inteiro sem nada para ampliar. */
+.fogo__glow {
   position: absolute;
-  inset: -6% 0;
+  inset: 0;
   z-index: -1;
+  background:
+    radial-gradient(58% 46% at 68% 52%, rgba(255, 106, 30, 0.30) 0%, rgba(255, 80, 16, 0.10) 45%, rgba(12, 9, 8, 0) 72%),
+    radial-gradient(90% 70% at 50% 120%, rgba(160, 54, 14, 0.22) 0%, rgba(12, 9, 8, 0) 60%),
+    var(--color-void);
+  pointer-events: none;
+}
+
+.fogo__grid {
+  position: relative;
+  display: grid;
+  align-items: center;
+  padding-block: clamp(5rem, 12vh, 8rem);
+}
+
+/* Banda contida. fogo.mp4 tem 1280 de largura real; o teto e
+   larguraCSS x DPR <= 1280 x 1.15 (ASSET-AUDIT.md) => 736 px em DPR 2. */
+.fogo__media {
+  position: relative;
+  grid-area: 1 / 1;
+  width: 100%;
+  max-width: 1472px;
+  aspect-ratio: 21 / 9;
+  justify-self: end;
+  overflow: hidden;
+  will-change: transform;
+}
+@media (min-resolution: 1.5dppx) {
+  .fogo__media {
+    max-width: 736px;
+  }
 }
 .fogo__media > * {
   position: absolute;
@@ -561,22 +525,57 @@ p {
   height: 100%;
   object-fit: cover;
 }
-.fogo__scrim {
+/* Escurece a banda o suficiente para a tipografia atravessar por cima dela. */
+.fogo__media::after {
+  content: "";
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(90% 60% at 60% 50%, rgba(255, 90, 20, 0.14) 0%, rgba(12, 9, 8, 0) 60%),
-    linear-gradient(90deg, rgba(12, 9, 8, 0.9) 0%, rgba(12, 9, 8, 0.3) 60%, rgba(12, 9, 8, 0.1) 100%);
+  background: linear-gradient(90deg, rgba(8, 5, 4, 0.94) 0%, rgba(8, 5, 4, 0.62) 46%, rgba(8, 5, 4, 0.18) 100%);
+  pointer-events: none;
+}
+
+/* A copy ocupa a MESMA celula da banda e passa por cima dela. */
+/* A copy AVANÇA sobre a banda: sem essa sobreposição vira "texto à esquerda,
+   mídia à direita" — exatamente o enquadramento do hero. O degradê da banda
+   é escuro justamente do lado por onde o texto entra. */
+.fogo__copy {
+  grid-area: 1 / 1;
+  position: relative;
+  z-index: 1;
+  justify-self: start;
+  max-width: min(100%, 46rem);
 }
 .fogo__title {
   font-size: clamp(2.4rem, 6.5vw, 5.2rem);
-  max-width: 16ch;
+  line-height: 0.98;
   text-wrap: balance;
 }
 .fogo__lead {
   margin-top: 1.4rem;
   max-width: 40ch;
-  color: var(--color-cream-dim);
+  color: var(--color-cream);
+}
+
+/* Mobile: sem cruzamento — a banda vem primeiro, a copy embaixo. Texto sobre
+   midia em tela estreita compromete leitura antes de compor bem. */
+@media (max-width: 767px) {
+  .fogo__grid {
+    grid-template-rows: auto auto;
+    gap: 2rem;
+  }
+  .fogo__media {
+    grid-area: 1 / 1;
+    justify-self: stretch;
+    aspect-ratio: 4 / 3;
+  }
+  .fogo__media::after {
+    background: linear-gradient(180deg, rgba(8, 5, 4, 0.25) 0%, rgba(8, 5, 4, 0.75) 100%);
+  }
+  .fogo__copy {
+    grid-area: 2 / 1;
+    justify-self: stretch;
+    max-width: none;
+  }
 }
 
 /* ================================================================ *
@@ -903,6 +902,36 @@ p {
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
   mix-blend-mode: overlay;
   pointer-events: none;
+}
+
+/* Handoff hero → Matéria (READ, 0.60–0.78). Nasce oculto: só o GSAP o revela,
+   e só onde existe a timeline scrubada. No mobile e sob reduced-motion não há
+   fase READ, então ele simplesmente não aparece. */
+.hero-handoff {
+  position: absolute;
+  inset: auto 0 0 0;
+  visibility: hidden;
+  opacity: 0;
+  padding: clamp(1.2rem, 4vw, 2.4rem);
+  background: linear-gradient(to top, rgba(6, 4, 3, 0.94) 0%, rgba(6, 4, 3, 0.7) 55%, transparent 100%);
+  pointer-events: none;
+}
+.hero-handoff__n {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  color: var(--color-ember-2);
+}
+.hero-handoff__line {
+  margin-top: 0.4rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.3rem, 2.6vw, 2rem);
+  line-height: 1.05;
+  color: var(--color-cream);
 }
 /* ------------------------------------------------------------------ *
  * MICROINTERAÇÕES — nós .motion-*

@@ -9,67 +9,6 @@ import { anchorHandler } from "../shared/ui";
 
 const M = "/forno-nobile/media/premium";
 
-/* -------------------------------- HERO -------------------------------- */
-export function Hero() {
-  const ref = useGsapContext(({ root, reduced, gsap }) => {
-    if (reduced) return;
-    const media = root.querySelector<HTMLElement>(".m-hero__media");
-    const title = root.querySelector<HTMLElement>(".m-hero__title");
-    const sub = root.querySelector<HTMLElement>(".m-hero__sub");
-    gsap.to(media, {
-      scale: 1.12,
-      yPercent: 6,
-      ease: "none",
-      scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
-    });
-    gsap.to([title, sub], {
-      yPercent: -40,
-      opacity: 0,
-      ease: "none",
-      stagger: 0.05,
-      scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
-    });
-  });
-
-  return (
-    <section className="m-hero" id="topo" ref={ref}>
-      <div className="m-hero__media">
-        <SmartVideo
-          src={`${M}/videos/hero.mp4`}
-          poster={`${M}/videos/hero-poster.jpg`}
-          label="Fatia de pizza sendo erguida diante do forno a lenha, com parmesão e manjericão caindo"
-          fill
-          playWhenVisible={false}
-          objectPosition="center 50%"
-        />
-        <div className="m-hero__scrim" />
-      </div>
-
-      <div className="wrap m-hero__inner">
-        <Reveal>
-          <span className="p-eyebrow">Forno Nobile — experiência</span>
-          <h1 className="m-hero__title">
-            Da <em>matéria-prima</em> ao fogo.
-          </h1>
-          <p className="m-hero__sub">
-            Não é um cardápio online. É a pizza napolitana, contada camada por
-            camada — no ritmo do seu scroll.
-          </p>
-          <div className="m-hero__actions">
-            <a className="btn" href="#exploded" onClick={anchorHandler("#exploded")}>
-              Começar
-            </a>
-            <a className="btn btn-line" href="#reservas" onClick={anchorHandler("#reservas")}>
-              Reservar mesa
-            </a>
-          </div>
-        </Reveal>
-      </div>
-      <span className="m-hero__cue">Role para começar</span>
-    </section>
-  );
-}
-
 /* ------------------------------- MATÉRIA ------------------------------- */
 export function Materia() {
   const ref = useGsapContext(({ root, reduced, gsap }) => {
@@ -107,25 +46,38 @@ export function Materia() {
 export function Fogo() {
   return (
     <section className="fogo" id="fogo" aria-label="O forno">
-      <Parallax className="fogo__media" depth="background" distance={100}>
-        <SmartVideo
-          src={`${M}/videos/fogo.mp4`}
-          poster={`${M}/videos/fogo-poster.jpg`}
-          label="Interior do forno a lenha da Forno Nobile com as chamas altas sobre a lenha"
-          fill
-          objectPosition="center"
-        />
-      </Parallax>
-      <div className="fogo__scrim" />
-      <div className="wrap">
-        <Reveal stagger={0.08}>
-          <p className="chapter__index">Capítulo 02 — Fogo</p>
-          <h2 className="fogo__title">90 segundos que mudam tudo.</h2>
-          <p className="fogo__lead">
-            Teto a 450&nbsp;°C, piso de pedra, lenha de eucalipto. A borda incha,
-            mancha e fica leve. Não dá para apressar nem atrasar.
-          </p>
-        </Reveal>
+      {/* O calor é CSS: gradiente não tem resolução, então preenche o quadro
+          inteiro sem custo de nitidez. O vídeo entra CONTIDO (fonte de 1280). */}
+      <div className="fogo__glow" aria-hidden="true" />
+
+      <div className="wrap fogo__grid">
+        <Parallax className="fogo__media" depth="background" distance={60}>
+          <SmartVideo
+            src={`${M}/videos/fogo.mp4`}
+            poster={`${M}/videos/fogo-poster.jpg`}
+            label="Interior do forno a lenha da Forno Nobile com as chamas altas sobre a lenha"
+            fill
+            objectPosition="center"
+          />
+        </Parallax>
+
+        {/* A tipografia ATRAVESSA a banda — enquadramento próprio deste
+            capítulo, diferente do hero (mídia à direita) e da montagem
+            (banda centrada). Ver §23: nada de composição repetida. */}
+        <div className="fogo__copy">
+          <Reveal stagger={0.08}>
+            <p className="chapter__index">Capítulo 02 — Fogo</p>
+            <h2 className="fogo__title">
+              90 segundos
+              <br />
+              que mudam tudo.
+            </h2>
+            <p className="fogo__lead">
+              Teto a 450&nbsp;°C, piso de pedra, lenha de eucalipto. A borda incha,
+              mancha e fica leve. Não dá para apressar nem atrasar.
+            </p>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -166,7 +118,10 @@ export function Sabores() {
           <Picture
             base={`${M}/images/macro-2`}
             alt="Macro da pizza napolitana com calabresa, tomate confitado e manjericão, brilho do forno ao fundo"
-            widths={[768, 1280, 1920]}
+            /* Sem 1920: os derivados -1920 do Premium são upscales de uma fonte
+               de 1280 (ASSET-AUDIT.md). Oferecê-los no srcset faz o navegador
+               baixar mais bytes para exibir a MESMA informação, mais mole. */
+            widths={[768, 1280]}
             sizes="(min-width: 900px) 42vw, 92vw"
           />
         </Reveal>

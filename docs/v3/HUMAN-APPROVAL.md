@@ -7,7 +7,7 @@ Somente o proprietário declara DESIGN / VISUAL / PRODUCT PASS.
 |---|---|---|---|---|
 | **P1** | Premium Hero + primeira transição | **PASS** (61/61, 0 FAIL) | AWAITING HUMAN APPROVAL | 2026-09-09 |
 | P2 | Montagem V3 (ex-"Exploded") | **PASS** (71/71, 0 FAIL) | AWAITING HUMAN APPROVAL | 2026-09-09 |
-| P3 | Premium completo | — | não iniciado | — |
+| P3 | Premium completo | **PASS** (71/71, 0 FAIL, 0 INFO) | AWAITING HUMAN APPROVAL | 2026-09-09 |
 | PRO | Profissional V3 | — | não iniciado | — |
 | ESS | Essencial V3 (refino) | — | não iniciado | — |
 | CF | CF Web Studio V3 | — | não iniciado | — |
@@ -28,12 +28,19 @@ Somente o proprietário declara DESIGN / VISUAL / PRODUCT PASS.
   lazy; medição só no scroll 0) que produziam falsos positivos E escondiam
   achados reais. Ambos corrigidos — ver `QA-MATRIX.md`.
 
+- **2026-09-09 — Fase 4 (Premium completo): status TÉCNICO PASS.**
+  A partir daqui o QA cobre a **página inteira** — não existe mais
+  "fora de escopo", e nenhum achado é rebaixado para INFO. 71/71 PASS.
+  Fechado nesta fase: handoff READ do storyboard (0.60–0.78) implementado;
+  Fogo contido + tipografia atravessando a banda; `-1920` removido do srcset;
+  CTA do drawer mobile corrigido (4.23:1 → 5.09:1); Hero antigo e ~72 linhas
+  de CSS órfão removidos.
+
 ## Pontos que precisam de decisão do proprietário no Gate P1
 
-1. **Fase READ/HANDOFF do storyboard não implementada.** `SCROLL-STORYBOARD.md`
-   0.60–0.78 prevê o numeral `02` e a primeira linha de Matéria entrando
-   *através da máscara da própria abertura*. Hoje há só um hold vazio — por isso
-   a metade esquerda fica preta no fim da faixa. É a maior lacuna do P1.
+1. ~~**Fase READ/HANDOFF do storyboard não implementada.**~~ **RESOLVIDO na
+   Fase 4:** `.hero-handoff` revela `02 / Farinha, água, sal e fogo.` pela
+   máscara da própria abertura em 0.60–0.78, como o storyboard previa.
 2. **Largura da faixa limitada pelo asset.** O storyboard pede largura → 100%.
    Em DPR 2 isso violaria o gate de nitidez (§53): `hero.mp4` tem 1280 reais.
    A faixa para em 736 px (DPR 2) / 1280 px (DPR 1). É a "abertura contida" do

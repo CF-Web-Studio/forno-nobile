@@ -147,8 +147,18 @@ export function HeroV3() {
         );
         tl.to(q(".hero-aside"), { opacity: 0, ease: ease.none, duration: 0.18 }, 0.28);
         tl.to(q(".hero-heat"), { opacity: 1, ease: ease.none, duration: 0.32 }, 0.28);
-        // 0.60–0.92 READ + HOLD (a faixa segura parada)
-        tl.to({}, { duration: 0.32 });
+
+        // 0.60–0.78 READ — o capítulo 02 entra pela máscara da PRÓPRIA abertura.
+        // É aqui que a continuidade acontece: os dois capítulos dividem o mesmo
+        // elemento, em vez de um terminar e o outro começar (SCROLL-STORYBOARD).
+        tl.fromTo(
+          q(".hero-handoff"),
+          { clipPath: "inset(100% 0% 0% 0%)", autoAlpha: 1 },
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 0.18, ease: ease.out },
+          0.6,
+        );
+        // 0.78–0.92 HOLD — a faixa segura parada com o handoff composto.
+        tl.to({}, { duration: 0.14 }, 0.78);
 
         /* ponteiro — nós próprios, sem colidir com o scrub (docs/v3/MOTION-OWNERSHIP.md) */
         if (window.matchMedia("(pointer: fine)").matches) {
@@ -309,6 +319,14 @@ export function HeroV3() {
             </div>
           </div>
           <div className="hero-sweep" ref={sweepRef} aria-hidden="true" />
+
+          {/* Handoff para o capítulo 02. aria-hidden porque a seção Matéria
+              logo abaixo carrega o mesmo texto de verdade — para leitor de
+              tela isto seria conteúdo duplicado. É puramente visual. */}
+          <div className="hero-handoff" aria-hidden="true">
+            <span className="hero-handoff__n">02</span>
+            <p className="hero-handoff__line">Farinha, água, sal e fogo.</p>
+          </div>
         </figure>
       </div>
 

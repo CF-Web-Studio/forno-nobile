@@ -1,9 +1,12 @@
 /**
- * QA automático — Gate P1 (Premium Hero V3 + primeira transição).
+ * QA automático — PÁGINA PREMIUM INTEIRA (Fase 4).
  * Implementa docs/v3/QA-MATRIX.md. Nada aqui declara DESIGN PASS.
  *
- *   node scripts/qa-p1.mjs            (assume preview em :4310)
- *   node scripts/qa-p1.mjs --url=...
+ * A partir da Fase 4 não existe mais "fora de escopo": toda a página é
+ * avaliada e qualquer achado reprova. Nada de rebaixar FAIL para INFO.
+ *
+ *   node scripts/qa-premium.mjs            (assume preview em :4310)
+ *   node scripts/qa-premium.mjs --url=...
  */
 import { chromium } from "playwright";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -13,7 +16,7 @@ const BASE =
   process.argv.find((a) => a.startsWith("--url="))?.slice(6) ??
   "http://localhost:4310/forno-nobile/premium/";
 
-const OUT = path.resolve("qa-report/v3/p1");
+const OUT = path.resolve("qa-report/v3/premium");
 
 const VIEWPORTS = [
   { name: "390x844", width: 390, height: 844, touch: true, dpr: 3 },
@@ -86,14 +89,12 @@ async function run(browser, vp, { reducedMotion = false } = {}) {
   /** Varre nitidez. Só enxerga o que já carregou — por isso roda de novo
    *  DEPOIS do passe de scroll, quando o lazy-loading já resolveu. */
   const scanSharpness = () => page.evaluate((dpr) => {
-    const inHero = [];
-    const outside = [];
+    const found = [];
     const scan = (el, natural, name) => {
       const w = el.getBoundingClientRect().width;
       if (!w || !natural) return;
       if (w * dpr <= natural * 1.15) return;
-      const msg = `${name} ${Math.round(w)}×${dpr} > ${natural}`;
-      (el.closest(".hero-stage, .assembly") ? inHero : outside).push(msg);
+      found.push(`${name} ${Math.round(w)}×${dpr} > ${natural}`);
     };
     // ATENÇÃO: `naturalWidth` NÃO é confiável aqui. O Chromium decodifica
     // imagens `loading="lazy"` em escala reduzida, e naturalWidth passa a
@@ -108,7 +109,7 @@ async function run(browser, vp, { reducedMotion = false } = {}) {
     }
     for (const el of document.querySelectorAll("video"))
       scan(el, el.videoWidth, el.src.split("/").pop());
-    return { inHero, outside };
+    return found;
   }, vp.dpr);
 
   /* ---------------------------------- contraste WCAG AA (prioridade 1) -- */
@@ -134,10 +135,7 @@ async function run(browser, vp, { reducedMotion = false } = {}) {
       return "rgb(255, 255, 255)";
     };
     const out = [];
-    const SCOPE = ".hero-stage, .assembly";
-    const sel = SCOPE.split(", ")
-      .flatMap((s) => ["h1", "h2", "h3", "p", "a", "span", "em"].map((t) => `${s} ${t}`))
-      .join(", ");
+    const sel = "h1, h2, h3, h4, p, a, span, em, li, label, button";
     for (const el of document.querySelectorAll(sel)) {
       const txt = (el.textContent ?? "").trim();
       if (!txt || el.children.length) continue;
@@ -156,7 +154,7 @@ async function run(browser, vp, { reducedMotion = false } = {}) {
     return out;
   });
   if (contrast.length) fail(label, "contraste-wcag", contrast.join(" | "));
-  else pass(label, "contraste-wcag", "todo texto do hero >= limiar AA");
+  else pass(label, "contraste-wcag", "todo texto da página >= limiar AA");
 
   // O estado :hover tem fundo próprio e precisa passar igual — foi onde o bug
   // era pior (2.59:1). Só faz sentido onde hover existe de verdade.
@@ -208,16 +206,15 @@ async function run(browser, vp, { reducedMotion = false } = {}) {
 
   /* ------------------------------------------------- mobile pin (§16) --- */
   if (vp.width <= 767) {
-    // §16 é sobre o HERO (escopo do Gate P1). Um pin em .exploded__stage é
-    // escopo P2 e não reprova este gate — mas fica registrado.
+    // §16/§36: nenhuma seção pode prender a tela no mobile.
     const pins = await page.evaluate(() =>
       [...document.querySelectorAll(".pin-spacer")].map(
         (e) => e.firstElementChild?.className ?? "?",
       ),
     );
-    const heroPins = pins.filter((c) => /hero-stage|assembly__stage/.test(c));
-    if (heroPins.length) fail(label, "mobile-pin", `${heroPins.length} pin em hero/montagem — deve ser 0`);
-    else pass(label, "mobile-pin", `0 pin em hero/montagem (outros: ${pins.join(",") || "nenhum"})`);
+    const heroPins = pins;
+    if (heroPins.length) fail(label, "mobile-pin", `${heroPins.length} pin no mobile (${pins.join(",")}) — deve ser 0`);
+    else pass(label, "mobile-pin", "0 pin-spacer");
   }
 
   /* --------------------------------------- conteúdo completo (reduced) --- */
@@ -295,15 +292,8 @@ async function run(browser, vp, { reducedMotion = false } = {}) {
   /* Nitidez medida AGORA: o passe de scroll acima já forçou o lazy-loading,
      então isto enxerga a página inteira, não só o que estava acima da dobra. */
   const soft = await scanSharpness();
-  if (soft.inHero.length) fail(label, "sharpness-escopo", soft.inHero.join(" | "));
-  else pass(label, "sharpness-escopo", "hero+montagem dentro do teto 1.15×");
-  if (soft.outside.length)
-    results.push({
-      vp: label,
-      check: "sharpness-fora-escopo",
-      status: "INFO",
-      detail: `${soft.outside.join(" | ")}  [seções fora do escopo atual]`,
-    });
+  if (soft.length) fail(label, "sharpness", soft.join(" | "));
+  else pass(label, "sharpness", "página inteira dentro do teto 1.15×");
 
   // overflow de novo no fim do scroll (pin/scrub podem introduzir)
   const overflowEnd = await page.evaluate(
@@ -335,11 +325,10 @@ const lines = results.map(
   (r) => `${r.status.padEnd(4)}  ${r.vp.padEnd(18)} ${r.check.padEnd(22)} ${r.detail}`,
 );
 const report = [
-  "# QA automático — Gate P1 (Premium Hero V3 + primeira transição)",
+  "# QA automático — Página Premium (Fase 4)",
   `URL: ${BASE}`,
   `Data: ${new Date().toISOString()}`,
   "",
-  "INFO = achado real, fora do escopo do Gate P1 (não reprova; fica registrado).",
   "Nada aqui declara DESIGN PASS — ver docs/v3/HUMAN-APPROVAL.md.",
   "",
   ...lines,
