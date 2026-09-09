@@ -10,7 +10,12 @@
 @theme {
   --color-void: #0c0908;
   --color-void-2: #14100d;
-  --color-ember: #e0561f;
+  /* Superfícies que carregam TEXTO BRANCO precisam de >=4.5:1 (WCAG AA).
+     O #e0561f original dava 3.80:1 e reprovava. */
+  --color-ember: #c04616; /* 5.09:1 com branco — fundo de CTA */
+  --color-ember-press: #a83a10; /* 6.41:1 — hover/active: a brasa aprofunda */
+  /* Acento CLARO: só como texto/foco sobre fundo escuro (7.66:1 sobre --color-void).
+     Nunca como fundo sob texto branco — ali dá 2.59:1. */
   --color-ember-2: #ff7a3d;
   --color-cream: #f3e9da;
   --color-cream-dim: #a99d8b;
@@ -91,8 +96,8 @@ p {
   transition: background var(--mo-dur-1) var(--mo-ease), border-color var(--mo-dur-1) var(--mo-ease);
 }
 .btn:hover {
-  background: var(--color-ember-2);
-  border-color: var(--color-ember-2);
+  background: var(--color-ember-press);
+  border-color: var(--color-ember-press);
 }
 .btn-line {
   background: transparent;
@@ -325,91 +330,207 @@ p {
 }
 
 /* ================================================================ *
- * EXPLODED VIEW
+ * A MONTAGEM — visor de ingredientes + match-cut para o produto real
+ * Ver src/premium/Assembly.tsx para o porquê de não haver empilhamento.
  * ================================================================ */
-.exploded {
+.assembly {
   position: relative;
   background: radial-gradient(120% 60% at 50% 30%, #171210 0%, var(--color-void) 70%);
 }
-.exploded__stage {
+.assembly__stage {
   position: relative;
-  height: 100svh;
-  min-height: 620px;
+  min-height: 100svh;
   display: grid;
-  place-items: center;
+  grid-template-rows: auto 1fr auto;
+  gap: clamp(1.5rem, 4vh, 3rem);
+  align-content: center;
+  padding-block: clamp(4rem, 10vh, 7rem);
   overflow: hidden;
-  perspective: 1400px;
 }
-.exploded__intro {
-  position: absolute;
-  top: clamp(4.5rem, 12vh, 8rem);
-  left: 50%;
-  translate: -50% 0;
+.assembly__intro {
   text-align: center;
-  z-index: 3;
-  width: min(90vw, 40rem);
+  width: min(92vw, 44rem);
+  margin-inline: auto;
 }
-.exploded__intro h2 {
-  font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+.assembly__intro h2 {
+  font-size: clamp(1.7rem, 3.6vw, 2.6rem);
   margin-top: 0.6rem;
 }
-.exploded__hint {
-  margin-top: 0.8rem;
-  font-family: var(--font-display);
-  font-size: 0.66rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--color-cream-dim);
-}
-.exploded__pizza {
+
+/* O visor: no desktop os frames se empilham no MESMO espaço (um por vez);
+   no mobile viram fluxo normal. */
+.assembly__viewport {
   position: relative;
-  width: min(78vw, 30rem);
-  aspect-ratio: 1;
-  transform-style: preserve-3d;
-  will-change: transform;
+  width: min(92vw, 62rem);
+  margin-inline: auto;
+  display: grid;
 }
-.exploded__layer {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+.assembly__frame,
+.assembly__final {
+  grid-area: 1 / 1;
+}
+.assembly__frame {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin: 0;
+  will-change: opacity, transform;
+}
+@media (min-width: 768px) {
+  .assembly__frame {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
+  }
+}
+/* Teto de nitidez: a fonte tem 1254 px reais. Em DPR 2 o limite é
+   1254 x 1.15 / 2 = 721 px (ver ASSET-AUDIT.md). */
+.assembly__shot {
   width: 100%;
+  max-width: 34rem;
   height: auto;
-  transform-origin: 50% 50%;
-  will-change: transform, opacity;
-  filter: drop-shadow(0 24px 40px rgba(0, 0, 0, 0.5));
+  justify-self: center;
+  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.55));
   user-select: none;
   -webkit-user-drag: none;
 }
-.exploded__glow {
+@media (min-resolution: 1.5dppx) {
+  .assembly__shot {
+    max-width: 700px;
+  }
+}
+.assembly__meta {
+  max-width: 26rem;
+}
+.assembly__n {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.18em;
+  color: var(--color-ember-2);
+}
+.assembly__name {
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  line-height: 1.05;
+  margin: 0.5rem 0 0.8rem;
+}
+.assembly__line {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: var(--color-cream-dim);
+}
+
+/* O corte para o produto real. */
+/* macro.mp4 tem 1280 de largura real. O frame do clímax nunca passa do que a
+   fonte sustenta: larguraCSS x DPR <= 1280 x 1.15 (ASSET-AUDIT.md). Em DPR 2
+   isso são 736 px; em DPR 1, 1472. A mídia contida é decisão de direção de
+   arte, não limitação escondida. */
+/* O teto já desconta o push-in de 1.06 do match-cut: o pico do movimento
+   (max-width x 1.06) precisa caber no limite, não só o estado em repouso.
+   DPR 1: 1388 x 1.06 = 1471. DPR 2: 694 x 1.06 = 736. */
+.assembly__final {
+  position: relative;
+  width: 100%;
+  max-width: 1388px;
+  margin-inline: auto;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  will-change: opacity, clip-path, transform;
+}
+@media (min-resolution: 1.5dppx) {
+  .assembly__final {
+    max-width: 694px;
+  }
+}
+/* Scrim: texto sobre mídia não pode depender do que o frame do vídeo mostra.
+   Garante o contraste independentemente do conteúdo por baixo (§39). */
+.assembly__final::after {
+  content: "";
   position: absolute;
-  width: min(70vw, 26rem);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 122, 61, 0.34) 0%, rgba(255, 122, 61, 0) 62%);
-  filter: blur(8px);
-  z-index: 0;
+  inset: auto 0 0 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(6, 4, 3, 0.92) 0%, rgba(6, 4, 3, 0.72) 42%, transparent 100%);
   pointer-events: none;
 }
-.exploded__caption {
+.assembly__payoff {
+  z-index: 1;
   position: absolute;
-  bottom: clamp(3rem, 9vh, 6rem);
-  left: 50%;
-  translate: -50% 0;
-  z-index: 3;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 0.9rem;
-  letter-spacing: 0.06em;
-  color: var(--color-cream);
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--color-hair);
-  border-radius: 999px;
-  background: rgba(12, 9, 8, 0.6);
-  backdrop-filter: blur(4px);
+  left: clamp(1rem, 3vw, 2.5rem);
+  bottom: clamp(1rem, 3vw, 2.5rem);
+  right: clamp(1rem, 3vw, 2.5rem);
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 2.4vw, 1.7rem);
+  line-height: 1.3;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
 }
-.exploded__static {
-  width: min(88vw, 40rem);
-  height: auto;
+.assembly__payoff em {
+  font-style: normal;
+  color: var(--color-ember-2);
+}
+
+/* Progresso — redundante com .assembly__live, nunca a única fonte (§39). */
+.assembly__ticks {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.assembly__ticks li {
+  width: 1.6rem;
+  height: 2px;
+  background: var(--color-hair);
+  transition: background var(--mo-micro) var(--mo-ease-out);
+}
+.assembly__ticks li.is-on {
+  background: var(--color-cream);
+}
+.assembly__ticks li.is-final {
+  width: 2.6rem;
+}
+.assembly__ticks li.is-final.is-on {
+  background: var(--color-ember-2);
+}
+.assembly__live {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-cream-dim);
+}
+
+/* Mobile: fluxo normal, nada empilhado, nada preso. */
+@media (max-width: 767px) {
+  .assembly__viewport {
+    display: block;
+  }
+  /* O nome vem ANTES da imagem no mobile. Com legenda embaixo, a imagem
+     seguinte entra na tela junto e o leitor casa a legenda com a foto errada.
+     A ordem do DOM continua img → figcaption (correto para leitor de tela). */
+  .assembly__meta {
+    order: -1;
+  }
+  .assembly__frame {
+    display: flex;
+    flex-direction: column;
+    /* respiro entre ingredientes >> respiro interno, para agrupar por Gestalt */
+    margin-bottom: clamp(5rem, 16vh, 8rem);
+    gap: 1.25rem;
+  }
+  .assembly__frame,
+  .assembly__final {
+    grid-area: auto;
+  }
+  .assembly__final {
+    aspect-ratio: 4 / 5;
+  }
+  .assembly__ticks {
+    display: none;
+  }
 }
 
 /* ================================================================ *
@@ -645,18 +766,200 @@ p {
   color: var(--color-gold);
 }
 
-/* Reduced motion: sem pin, stage colapsa para altura natural */
+/* Reduced motion: sem pin, tudo em fluxo, todo o conteúdo presente (§38) */
 @media (prefers-reduced-motion: reduce) {
-  .exploded__stage {
-    height: auto;
-    padding-block: 6rem;
+  .assembly__stage {
+    min-height: 0;
   }
-  .exploded__intro {
-    position: static;
-    translate: none;
-    margin-bottom: 2rem;
+  .assembly__viewport {
+    display: block;
   }
-  .exploded__caption {
+  .assembly__frame {
+    margin-bottom: clamp(3rem, 8vh, 5rem);
+  }
+  .assembly__ticks {
     display: none;
+  }
+}
+
+/* HERO V3 AG */
+.hero-stage {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--color-void);
+}
+.hero-heat {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--color-crust) 0%, transparent 60%);
+  mix-blend-mode: color-dodge;
+  opacity: 0;
+  pointer-events: none;
+}
+/* Sem `width: 100%` aqui: .hero-grid vem depois de .wrap no stylesheet e,
+   com a mesma especificidade, anularia o `min(1280px, 92vw)` — a coluna de
+   texto encostava em x=0 e a abertura sangrava até a borda. A abertura é
+   CONTIDA por direção de arte (ASSET-AUDIT.md: fonte real de 1280). */
+.hero-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 6rem 0;
+}
+@media (min-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+}
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.hero-num {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-crust);
+  letter-spacing: 0.1em;
+}
+.hero-display {
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.hero-line-mask {
+  display: block;
+  overflow: hidden;
+}
+.hero-line {
+  display: block;
+}
+.hero-body {
+  font-size: 1.25rem;
+  color: var(--color-cream-dim);
+  max-width: 400px;
+  margin-bottom: 2rem;
+}
+.hero-actions {
+  display: flex;
+  gap: 1rem;
+}
+/* A razão vive numa custom property numérica. O GSAP NUNCA escreve
+   `aspect-ratio` direto: ele reaproveita o denominador do valor CSS
+   (`16/9`) e um número puro vira `1.6 / 9`, estourando a altura. */
+.hero-aperture {
+  position: relative;
+  --ap: 1.7778;
+  --apw: 100%;
+  width: var(--apw);
+  aspect-ratio: var(--ap);
+  overflow: hidden;
+  transform-origin: center;
+  /* A faixa cresce PARA A ESQUERDA: a borda direita fica ancorada na coluna
+     (storyboard 0.28–0.60, "ancorada pela direita"). */
+  justify-self: end;
+}
+/* Tablet: coluna única — a abertura é CONTIDA, senão o vídeo de 1280
+   é esticado além do teto de nitidez em DPR 2 (ver ASSET-AUDIT.md). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hero-aperture {
+    max-width: 680px;
+  }
+}
+.hero-media-scroll {
+  position: absolute;
+  inset: 0;
+}
+/* Sangria só onde existe parallax de ponteiro — espelha exatamente a
+   condição do JS. Sem ela, o bleed só desperdiçaria resolução. */
+.hero-media-pointer {
+  position: absolute;
+  inset: 0;
+}
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .hero-media-pointer {
+    inset: -20px;
+  }
+}
+.hero-media-asset {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+/* ------------------------------------------------------------------ *
+ * MICROINTERAÇÕES — nós .motion-*
+ * Dono de `transform`/`opacity` aqui é o CSS. GSAP nunca toca nestes nós
+ * (ver docs/v3/MOTION-OWNERSHIP.md). Zero JS, zero scheduler extra.
+ * ------------------------------------------------------------------ */
+
+/* .btn já transiciona background/border-color; aqui só entra `transform`,
+   propriedade que nenhum outro dono escreve. */
+.motion-cta {
+  transition: transform var(--mo-micro) var(--mo-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .motion-cta:hover {
+    transform: scale(1.03);
+  }
+}
+.motion-cta:active {
+  transform: scale(0.97);
+}
+
+.motion-cue {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  width: 1px;
+  height: 40px;
+  background: var(--color-crust);
+  transform: translateX(-50%);
+  opacity: 0.5;
+  animation: cue-pulse 2.4s var(--mo-ease-inout) infinite;
+}
+@keyframes cue-pulse {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translateX(-50%) translateY(7px);
+  }
+}
+
+/* base.css já neutraliza durações sob reduced-motion; aqui tornamos explícito
+   que nada se move — e o cue permanece visível como afordância estática. */
+@media (prefers-reduced-motion: reduce) {
+  .motion-cta {
+    transition: none;
+  }
+  .motion-cta:hover,
+  .motion-cta:active {
+    transform: none;
+  }
+  .motion-cue {
+    animation: none;
+    opacity: 0.5;
+    transform: translateX(-50%);
   }
 }

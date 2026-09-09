@@ -1,8 +1,9 @@
 import { useSmoothScroll } from "../shared/motion/hooks";
 import { WhatsAppFab } from "../shared/components/WhatsAppFab";
 import { Header } from "./Header";
-import { Exploded } from "./Exploded";
-import { Hero, Materia, Fogo, Produto, Sabores, Final, Footer } from "./sections";
+import { Assembly } from "./Assembly";
+import { Materia, Fogo, Produto, Sabores, Final, Footer } from "./sections";
+import { HeroV3 } from "./HeroV3";
 
 export function App() {
   useSmoothScroll();
@@ -14,9 +15,9 @@ export function App() {
       </a>
       <Header />
       <main id="conteudo">
-        <Hero />
+        <HeroV3 />
         <Materia />
-        <Exploded />
+        <Assembly />
         <Fogo />
         <Produto />
         <Sabores />

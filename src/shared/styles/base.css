@@ -10,6 +10,11 @@
   --mo-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --mo-dist: 24px;
   --mo-stagger: 0.08s;
+
+  /* espelham src/shared/motion/tokens.ts — mesma curva, dois consumidores.
+     O CSS é o dono das microinterações (.motion-*); GSAP é o dono do scroll. */
+  --mo-micro: 0.28s;
+  --mo-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 *,
