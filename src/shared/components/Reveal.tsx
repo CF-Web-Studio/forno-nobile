@@ -1,10 +1,11 @@
-import { type ElementType, type ReactNode } from "react";
+import { type CSSProperties, type ElementType, type ReactNode } from "react";
 import { useGsapContext } from "../motion/hooks";
 
 type RevealProps = {
   children: ReactNode;
   as?: ElementType;
   className?: string;
+  style?: CSSProperties;
   /** deslocamento vertical inicial em px (default 24) */
   y?: number;
   /** atraso em s */
@@ -27,6 +28,7 @@ export function Reveal({
   children,
   as: Tag = "div",
   className,
+  style,
   y = 24,
   delay = 0,
   duration = 0.7,
@@ -69,7 +71,7 @@ export function Reveal({
   });
 
   return (
-    <Tag ref={ref as never} className={className}>
+    <Tag ref={ref as never} className={className} style={style}>
       {children}
     </Tag>
   );

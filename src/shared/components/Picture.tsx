@@ -38,7 +38,7 @@ export function Picture({
   const largest = widths[widths.length - 1];
 
   return (
-    <picture>
+    <picture style={{ display: "contents" }}>
       <source type="image/webp" srcSet={srcSet} sizes={sizes} />
       <img
         src={`${base}-${largest}.${fallbackExt}`}

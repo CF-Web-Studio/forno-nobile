@@ -48,6 +48,11 @@ body {
   overflow-x: clip;
 }
 
+/* Âncoras não escondem o título sob o header fixo */
+:where(section, [id][data-anchor]) {
+  scroll-margin-top: 88px;
+}
+
 /* Foco visível — a estética nunca remove o foco de teclado */
 :focus-visible {
   outline: 3px solid var(--focus-ring, currentColor);

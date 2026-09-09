@@ -12,6 +12,8 @@ type SmartVideoProps = {
   /** começa a tocar só quando entra na viewport (default true) */
   playWhenVisible?: boolean;
   objectPosition?: string;
+  /** preenche o container pai (position:absolute inset:0) em vez de impor aspect-ratio */
+  fill?: boolean;
 };
 
 /**
@@ -27,6 +29,7 @@ export function SmartVideo({
   ratio = "16 / 9",
   playWhenVisible = true,
   objectPosition = "center",
+  fill = false,
 }: SmartVideoProps) {
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -71,12 +74,12 @@ export function SmartVideo({
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, [reduced, active]);
 
+  const wrapStyle: React.CSSProperties = fill
+    ? { position: "absolute", inset: 0, width: "100%", height: "100%", overflow: "hidden" }
+    : { aspectRatio: ratio, overflow: "hidden", position: "relative" };
+
   return (
-    <div
-      ref={wrapRef}
-      className={className}
-      style={{ aspectRatio: ratio, overflow: "hidden", position: "relative" }}
-    >
+    <div ref={wrapRef} className={className} style={wrapStyle}>
       {reduced || !active ? (
         <img
           src={poster}

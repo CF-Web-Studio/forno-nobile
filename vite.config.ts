@@ -20,6 +20,13 @@ export default defineConfig({
         profissional: resolve(__dirname, "profissional/index.html"),
         premium: resolve(__dirname, "premium/index.html"),
       },
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-dom/client"],
+          gsap: ["gsap", "gsap/ScrollTrigger"],
+          lenis: ["lenis"],
+        },
+      },
     },
   },
 });
