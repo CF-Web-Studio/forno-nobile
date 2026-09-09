@@ -8,8 +8,8 @@ Somente o proprietário declara DESIGN / VISUAL / PRODUCT PASS.
 | **P1** | Premium Hero + primeira transição | **PASS** (61/61, 0 FAIL) | AWAITING HUMAN APPROVAL | 2026-09-09 |
 | P2 | Montagem V3 (ex-"Exploded") | **PASS** (71/71, 0 FAIL) | AWAITING HUMAN APPROVAL | 2026-09-09 |
 | P3 | Premium completo | **PASS** (71/71, 0 FAIL, 0 INFO) | AWAITING HUMAN APPROVAL | 2026-09-09 |
-| PRO | Profissional V3 | — | não iniciado | — |
-| ESS | Essencial V3 (refino) | — | não iniciado | — |
+| PRO | Profissional V3 | **PASS** (contraste e nitidez) | AWAITING HUMAN APPROVAL | 2026-09-09 |
+| ESS | Essencial V3 (refino) | **PASS** (71/71, 0 FAIL) | AWAITING HUMAN APPROVAL | 2026-09-09 |
 | CF | CF Web Studio V3 | — | não iniciado | — |
 | DEPLOY | merge em main + Pages | — | **requer "APROVADO PARA DEPLOY" explícito** | — |
 
@@ -35,6 +35,26 @@ Somente o proprietário declara DESIGN / VISUAL / PRODUCT PASS.
   Fogo contido + tipografia atravessando a banda; `-1920` removido do srcset;
   CTA do drawer mobile corrigido (4.23:1 → 5.09:1); Hero antigo e ~72 linhas
   de CSS órfão removidos.
+
+- **2026-09-09 — Fase 5 (Profissional).** O `§19` apontava "salto insuficiente";
+  a causa era arquitetural, não de acabamento: os dois heroes eram foto
+  full-bleed + tipo à esquerda. Virou **capa editorial em split**. Corrigidas
+  6 reprovações reais de contraste, entre elas um bug de cascata em que
+  `.btn:hover` sequestrava o `--_bg` do botão outline.
+- **2026-09-09 — Correção de método, decidida pelo proprietário.** O check
+  `contraste-sobre-midia` que eu havia criado não era confiável e foi
+  **removido**, não rebaixado: ver "O que este QA NÃO cobre" em `QA-MATRIX.md`.
+  A suavidade do hero do Essencial virou **exceção declarada por arquivo**,
+  com motivo escrito, visível no relatório como `EXCE`.
+
+- **2026-09-09 — Fase 6 (Essencial): 71/71 PASS.** Refino, não redesenho — o
+  §24 manda preservar o que funciona. Três reprovações reais de contraste:
+  `--color-terra` usado como TEXTO sobre claro (4.37:1 no papel, 3.88:1 no
+  fundo alternativo) onde já existia `--color-terra-600`; e o CTA do drawer com
+  a mesma colisão de especificidade dos outros dois tiers (3.58:1).
+- **2026-09-09 — Os três tiers em 71 PASS / 0 FAIL.** O mesmo bug de CTA de
+  drawer existia nos três, e só apareceu quando o QA passou a cobrir a página
+  inteira em vez de uma seção.
 
 ## Pontos que precisam de decisão do proprietário no Gate P1
 

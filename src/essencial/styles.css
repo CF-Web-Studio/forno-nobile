@@ -72,7 +72,9 @@ p {
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-terra);
+  /* terra como TEXTO sobre claro: #c1502e da 4.37:1 no papel e 3.88:1 no
+     fundo alternativo. --color-terra-600 e a variante que passa AA. */
+  color: var(--color-terra-600);
 }
 
 .btn {
@@ -271,6 +273,9 @@ p {
   margin-top: 0.75rem;
   justify-content: center;
   border-bottom: 0;
+  /* `.nav-mobile a` (0,2,0) vence `.btn` (0,1,0) e pintava o CTA de tinta
+     escura sobre o terra: 3.58:1. Branco explicito volta para 4.71:1. */
+  color: #fff;
 }
 
 @media (max-width: 860px) {
@@ -492,7 +497,7 @@ p {
 .featured__num {
   font-family: var(--font-display);
   font-weight: 700;
-  color: var(--color-terra);
+  color: var(--color-terra-600); /* 4.37:1 -> AA */
   font-size: 0.85rem;
 }
 .featured__name {
