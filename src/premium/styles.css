@@ -2,6 +2,35 @@
 @import "../shared/styles/base.css";
 
 /* ------------------------------------------------------------------ *
+ * TIPOGRAFIA — Instrument Serif (OFL, auto-hospedada, 43 KB no total)
+ *
+ * Só no Premium. Os outros tiers seguem com stack de sistema — e essa é
+ * justamente a diferença: `"Helvetica Neue", "Inter", "Segoe UI"` cai em
+ * Segoe UI no Windows, ou seja, a fonte padrão do sistema operacional. Uma
+ * display serif de alto contraste é o que separa "site bom" de "peça
+ * editorial", e é a mudança de maior alavancagem na percepção de valor.
+ * ------------------------------------------------------------------ */
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/forno-nobile/fonts/instrument-serif-regular.woff2") format("woff2");
+  /* latin: evita baixar glifos que este site nunca usa */
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/forno-nobile/fonts/instrument-serif-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ------------------------------------------------------------------ *
  * FORNO NOBILE — PREMIUM
  * Promessa: "isso parece uma experiencia digital, nao apenas um site."
  * Premium = mais precisao, nao mais efeitos.
@@ -22,6 +51,10 @@
   --color-gold: #caa25a;
   --color-hair: rgba(243, 233, 218, 0.12);
 
+  /* Display serif de alto contraste: só nas manchetes. */
+  --font-editorial: "Instrument Serif", "Playfair Display", Georgia, serif;
+  /* Grotesk fica na microtipografia — eyebrow, nav, botão. Serif em caixa
+     alta de 11 px não é elegante, é ilegível. */
   --font-display: "Helvetica Neue", "Inter", "Segoe UI", system-ui, sans-serif;
   --font-serif: "Iowan Old Style", Georgia, "Times New Roman", serif;
 }
@@ -41,7 +74,13 @@ body {
 
 h1,
 h2,
-h3,
+h3 {
+  font-family: var(--font-editorial);
+  font-weight: 400; /* a Instrument Serif tem um peso só; 700 forçaria sintético */
+  letter-spacing: -0.01em;
+  line-height: 1;
+  margin: 0;
+}
 h4 {
   font-family: var(--font-display);
   font-weight: 700;
@@ -767,9 +806,13 @@ p {
   padding: 6rem 0;
 }
 @media (min-width: 1024px) {
+  /* Assimetrico, nao meio a meio: com 1fr 1fr a manchete em serif grande
+     voltava a quebrar em "Da materia-/prima". A abertura nao perde nada —
+     ela ja e limitada pelo teto de nitidez, entao comecar menor so aumenta o
+     percurso da transformacao. */
   .hero-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 1.16fr 0.84fr;
+    gap: clamp(2.5rem, 4vw, 4rem);
   }
 }
 .hero-copy {
@@ -784,11 +827,17 @@ p {
   color: var(--color-crust);
   letter-spacing: 0.1em;
 }
+/* Caixa mista na serif de alto contraste. Caixa-alta grotesk lia como
+   "landing page"; isto lê como capa. */
 .hero-display {
-  font-size: clamp(3rem, 8vw, 6rem);
-  line-height: 0.9;
-  text-transform: uppercase;
-  margin-bottom: 1.5rem;
+  font-size: clamp(3.1rem, 8.4vw, 6.6rem);
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.6rem;
+}
+.hero-display em {
+  font-style: italic;
+  color: var(--color-ember-2);
 }
 .hero-line-mask {
   display: block;
@@ -892,18 +941,46 @@ p {
  * (ver docs/v3/MOTION-OWNERSHIP.md). Zero JS, zero scheduler extra.
  * ------------------------------------------------------------------ */
 
-/* .btn já transiciona background/border-color; aqui só entra `transform`,
-   propriedade que nenhum outro dono escreve. */
+/* .btn já transiciona background/border-color; aqui entram `transform` e uma
+   varredura interna, propriedades que nenhum outro dono escreve.
+   `scale` sozinho é o hover padrão de todo template. A varredura de luz
+   atravessando o botão é o detalhe que separa acabamento de agência de
+   acabamento de biblioteca — e custa um pseudo-elemento. */
 .motion-cta {
-  transition: transform var(--mo-micro) var(--mo-ease-out);
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--mo-micro) var(--mo-ease-out),
+    box-shadow var(--mo-dur-1) var(--mo-ease-out);
+}
+.motion-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.22) 48%,
+    transparent 76%
+  );
+  transform: translateX(-120%);
+  pointer-events: none;
 }
 @media (hover: hover) and (pointer: fine) {
   .motion-cta:hover {
-    transform: scale(1.03);
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(192, 70, 22, 0.28);
+  }
+  .motion-cta:hover::after {
+    transform: translateX(120%);
+    transition: transform 0.62s var(--mo-ease-out);
+  }
+  .motion-cta.btn-line:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
   }
 }
 .motion-cta:active {
-  transform: scale(0.97);
+  transform: translateY(0) scale(0.985);
 }
 
 .motion-cue {
@@ -938,6 +1015,10 @@ p {
   .motion-cta:hover,
   .motion-cta:active {
     transform: none;
+    box-shadow: none;
+  }
+  .motion-cta::after {
+    display: none;
   }
   .motion-cue {
     animation: none;

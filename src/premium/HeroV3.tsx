@@ -5,7 +5,31 @@ import { anchorHandler } from "../shared/ui";
 
 const M = "/forno-nobile/media/premium";
 
-const LINES = ["Da matéria-", "prima", "ao fogo."];
+/**
+ * SLOT DO PLANO DO HERO — trocar o asset é mudar só estas duas linhas.
+ *
+ * Requisitos para o arquivo novo (mesmos da `montagem.mp4`, para que hero e
+ * montagem pareçam a mesma peça):
+ *  · 1280×720, 24 fps, sem áudio;
+ *  · mesma família de luz — brasa quente vinda de baixo, fundo escuro;
+ *  · reencodar com keyframe curto antes de commitar:
+ *      ffmpeg -i entrada.mp4 -an -c:v libx264 -crf 26 -preset slow \
+ *             -g 6 -keyint_min 6 -sc_threshold 0 -pix_fmt yuv420p \
+ *             -movflags +faststart public/media/premium/videos/hero.mp4
+ *  · pôster no último quadro: -ss <duração-0.1> -frames:v 1
+ *
+ * O teto de nitidez é lido da largura REAL do arquivo (NAT_W abaixo). Se o
+ * plano novo vier em 1920, subir NAT_W já libera a abertura a crescer mais.
+ */
+const HERO_VIDEO = `${M}/videos/hero.mp4`;
+const HERO_POSTER = `${M}/videos/hero-poster.jpg`;
+
+/** Duas linhas em caixa mista. A quebra forçada "Da matéria-/prima" só existia
+ *  porque a caixa-alta grotesk não cabia; na serif editorial ela vira defeito. */
+const LINES: { text: string; em?: string }[] = [
+  { text: "Da matéria-prima" },
+  { text: "ao ", em: "fogo." },
+];
 
 /** Proporções da abertura por setup (ver docs/v3/ART-DIRECTION.md) */
 const AP = {
@@ -258,8 +282,11 @@ export function HeroV3() {
 
           <h1 className="hero-display">
             {LINES.map((l) => (
-              <span className="hero-line-mask" key={l}>
-                <span className="hero-line">{l}</span>
+              <span className="hero-line-mask" key={l.text}>
+                <span className="hero-line">
+                  {l.text}
+                  {l.em && <em>{l.em}</em>}
+                </span>
               </span>
             ))}
           </h1>
@@ -296,7 +323,7 @@ export function HeroV3() {
               {reduced ? (
                 <img
                   className="hero-media-asset"
-                  src={`${M}/videos/hero-poster.jpg`}
+                  src={HERO_POSTER}
                   alt="Pizza napolitana sendo servida diante do forno a lenha"
                   width={1280}
                   height={720}
@@ -304,8 +331,8 @@ export function HeroV3() {
               ) : (
                 <video
                   className="hero-media-asset"
-                  src={`${M}/videos/hero.mp4`}
-                  poster={`${M}/videos/hero-poster.jpg`}
+                  src={HERO_VIDEO}
+                  poster={HERO_POSTER}
                   width={1280}
                   height={720}
                   muted

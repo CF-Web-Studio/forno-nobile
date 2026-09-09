@@ -10,6 +10,18 @@
     />
     <meta name="robots" content="noindex" />
     <meta name="theme-color" content="#0c0908" />
+
+    <!-- A manchete do hero é o LCP e usa esta fonte. Sem preload ela chega
+         depois do primeiro paint e o texto troca de forma na frente do
+         usuário. `crossorigin` é obrigatório em preload de fonte, mesmo
+         same-origin: sem ele o navegador baixa o arquivo duas vezes. -->
+    <link
+      rel="preload"
+      href="/forno-nobile/fonts/instrument-serif-regular.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='15' fill='%230c0908'/><circle cx='16' cy='16' r='9' fill='none' stroke='%23e0561f' stroke-width='2'/></svg>"
