@@ -300,6 +300,131 @@ p {
 }
 
 /* ================================================================ *
+ * MATERIA — capitulo 01, abertura editorial
+ * ================================================================ */
+.materia {
+  position: relative;
+  padding-block: clamp(5rem, 11vw, 9rem) clamp(3rem, 7vw, 5rem);
+}
+.materia__grid {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+@media (min-width: 900px) {
+  /* Assimetrico: o texto manda, o objeto respira no espaco negativo. */
+  .materia__grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  }
+}
+.materia__title {
+  font-size: clamp(2.3rem, 5.6vw, 4.6rem);
+  line-height: 1.04;
+  margin-top: 0.4rem;
+}
+.materia__dim {
+  color: var(--color-cream-dim);
+}
+.materia__lead {
+  margin-top: 1.6rem;
+  max-width: 42ch;
+  color: var(--color-cream-dim);
+  font-size: 1.12rem;
+}
+
+/* A massa como OBJETO. 01-massa.webp tem 1254 de largura real; o teto e
+   1254 x 1.15 / DPR. Em DPR 2 sao 721 px — fico bem abaixo, em 520, porque
+   aqui o espaco negativo faz parte da composicao. */
+.materia__object {
+  margin: 0;
+  justify-self: center;
+  width: min(78vw, 520px);
+  will-change: transform, opacity;
+}
+.materia__object img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* a sombra assenta o objeto no escuro; sem ela ele flutua recortado */
+  filter: drop-shadow(0 40px 60px rgba(0, 0, 0, 0.65));
+}
+
+/* Ficha tecnica: grotesk, dado de oficio. Contrapeso funcional a serif. */
+.materia__specs {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  padding-top: clamp(1.4rem, 3vw, 2.2rem);
+  border-top: 1px solid var(--color-hair);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.2rem, 3vw, 2.4rem);
+}
+@media (min-width: 720px) {
+  .materia__specs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.materia__spec dt {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.66rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--color-cream-dim);
+}
+.materia__spec dd {
+  margin: 0.45rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  letter-spacing: -0.02em;
+  color: var(--color-cream);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ================================================================ *
+ * FINAL — capitulo 05, ultimo plano
+ * ================================================================ */
+/* forno-fogo tem 1280 reais: teto 1280 x 1.15 / DPR = 736 px em DPR 2.
+   O pull-back parte de 1.12, entao o teto ja desconta esse pico. */
+.final__shot {
+  margin: 0 auto clamp(2.6rem, 6vw, 4.5rem);
+  /* Largura UNICA de proposito. Com largura dependente de DPR o `sizes` do
+     srcset nao consegue descreve-la — ele nao enxerga resolucao — e o
+     navegador escolhia a fonte de 768 para exibir a 1314. 640 e seguro nos
+     dois: em DPR 1 pede 640 (fonte 768), em DPR 2 pede 1280 (fonte 1280), e
+     o pico de 1.12 do pull-back cabe em ambos. */
+  width: min(92vw, 640px);
+  aspect-ratio: 21 / 9;
+  overflow: hidden;
+  border-radius: 2px;
+  position: relative;
+}
+.final__shotImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  will-change: transform;
+}
+/* vinheta: o plano se dissolve no fundo em vez de terminar num retangulo */
+.final__shot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 70% at 50% 45%, rgba(12, 9, 8, 0) 0%, rgba(12, 9, 8, 0.55) 78%, var(--color-void) 100%);
+  pointer-events: none;
+}
+.m-final__title em {
+  font-style: italic;
+  color: var(--color-ember-2);
+}
+/* O CTA final tem presenca, nao peso de banner: mesma pilula, corpo maior. */
+.final__cta {
+  font-size: 0.86rem;
+  padding: 1.15em 2.4em;
+}
+
+/* ================================================================ *
  * A MONTAGEM — convergencia scrubada pelo scroll
  * Ver src/premium/Assembly.tsx para o porque de nao haver composicao.
  * ================================================================ */
@@ -474,6 +599,7 @@ p {
   position: absolute;
   inset: 0;
   z-index: -1;
+  will-change: opacity;
   background:
     radial-gradient(58% 46% at 68% 52%, rgba(255, 106, 30, 0.30) 0%, rgba(255, 80, 16, 0.10) 45%, rgba(12, 9, 8, 0) 72%),
     radial-gradient(90% 70% at 50% 120%, rgba(160, 54, 14, 0.22) 0%, rgba(12, 9, 8, 0) 60%),
@@ -522,7 +648,10 @@ p {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(8, 5, 4, 0.94) 0%, rgba(8, 5, 4, 0.62) 46%, rgba(8, 5, 4, 0.18) 100%);
+  /* escurece SO onde o texto passa. O degrade anterior era calibrado para a
+     grotesk cruzando toda a banda e, sem isso, apenas apagava as chamas —
+     justo o que o capitulo precisa mostrar. */
+  background: linear-gradient(90deg, rgba(8, 5, 4, 0.9) 0%, rgba(8, 5, 4, 0.5) 34%, rgba(8, 5, 4, 0.06) 62%, rgba(8, 5, 4, 0) 100%);
   pointer-events: none;
 }
 
@@ -535,12 +664,20 @@ p {
   position: relative;
   z-index: 1;
   justify-self: start;
-  max-width: min(100%, 46rem);
+  /* precisa ser largo o bastante para a segunda linha CRUZAR a banda; a serif
+     e mais estreita que a grotesk e o cruzamento tinha sumido */
+  max-width: min(100%, 56rem);
 }
 .fogo__title {
-  font-size: clamp(2.4rem, 6.5vw, 5.2rem);
+  /* grande o bastante para a segunda linha entrar na banda: o cruzamento
+     e a composicao deste capitulo, nao um acaso de largura */
+  font-size: clamp(2.4rem, 7.4vw, 6.2rem);
   line-height: 0.98;
-  text-wrap: balance;
+  letter-spacing: -0.015em;
+}
+.fogo__title em {
+  font-style: italic;
+  color: var(--color-ember-2);
 }
 .fogo__lead {
   margin-top: 1.4rem;
@@ -567,6 +704,172 @@ p {
     grid-area: 2 / 1;
     justify-self: stretch;
     max-width: none;
+  }
+}
+
+/* ================================================================ *
+ * PRODUTO — capitulo 03, chapa larga com legenda embaixo
+ * ================================================================ */
+.produto {
+  position: relative;
+  padding-block: clamp(5rem, 11vw, 9rem);
+}
+.produto__figure {
+  margin: 0;
+  width: min(92vw, 1280px);
+  margin-inline: auto;
+  display: grid;
+  justify-items: center;
+  gap: clamp(1.8rem, 4vw, 3rem);
+}
+/* macro.mp4 tem 1280 reais: teto 1280 x 1.15 / DPR. Em DPR 2 sao 736 px.
+   Contida e cercada de escuro, a chapa le como copia de galeria — e o
+   enquadramento nativo mostra cornicione, queijo e volume inteiros. */
+.produto__plate {
+  position: relative;
+  /* 20 px descontados: `.produto__inner` tem margin -10px para absorver a
+     microprofundidade, e isso alarga a midia ALEM da chapa. O teto vale para
+     o pixel renderizado, nao para o container. */
+  width: min(92vw, 1452px);
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.72), 0 0 0 1px rgba(243, 233, 218, 0.06);
+  will-change: clip-path;
+}
+@media (min-resolution: 1.5dppx) {
+  .produto__plate {
+    width: min(92vw, 716px);
+  }
+}
+/* a sangria absorve o deslocamento de microprofundidade sem abrir borda */
+.produto__inner {
+  margin: -10px;
+  will-change: transform;
+}
+.produto__caption {
+  width: min(100%, 46rem);
+  text-align: center;
+}
+.produto__title {
+  margin-top: 0.5rem;
+  font-size: clamp(2rem, 4.6vw, 3.4rem);
+  line-height: 1.02;
+  text-wrap: balance;
+}
+.produto__title em {
+  font-style: italic;
+  color: var(--color-ember-2);
+}
+.produto__lead {
+  margin-top: 1.2rem;
+  margin-inline: auto;
+  max-width: 46ch;
+  color: var(--color-cream-dim);
+  font-size: 1.08rem;
+}
+
+/* ================================================================ *
+ * SABORES — capitulo 04, indice editorial
+ * ================================================================ */
+.sabores {
+  position: relative;
+  padding-block: clamp(5rem, 11vw, 9rem);
+}
+.sabores__head {
+  max-width: 46rem;
+  margin-bottom: clamp(2.6rem, 6vw, 4.5rem);
+}
+.sabores__title {
+  margin-top: 0.5rem;
+  font-size: clamp(2.1rem, 5vw, 3.8rem);
+  line-height: 1.02;
+}
+.sabores__title em {
+  font-style: italic;
+  color: var(--color-ember-2);
+}
+.sabores__lead {
+  margin-top: 1.2rem;
+  max-width: 48ch;
+  color: var(--color-cream-dim);
+  font-size: 1.08rem;
+}
+
+.sabores__index {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--color-hair);
+}
+.sabores__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: clamp(0.9rem, 2.4vw, 2rem);
+  padding: clamp(1.3rem, 3vw, 2.1rem) 0;
+  border-bottom: 1px solid var(--color-hair);
+  transition:
+    transform var(--mo-dur-1) var(--mo-ease-out),
+    border-color var(--mo-dur-1) var(--mo-ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .sabores__row:hover {
+    transform: translateX(6px);
+    border-bottom-color: color-mix(in srgb, var(--color-ember-2) 40%, transparent);
+  }
+  .sabores__row:hover .sabores__n {
+    color: var(--color-ember-2);
+  }
+}
+.sabores__n {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  color: var(--color-cream-dim);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--mo-dur-1) var(--mo-ease-out);
+}
+.sabores__name {
+  font-size: clamp(1.35rem, 2.8vw, 2.1rem);
+  line-height: 1.05;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+.sabores__veg {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+.sabores__desc {
+  margin-top: 0.5rem;
+  max-width: 52ch;
+  color: var(--color-cream-dim);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.sabores__price {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  letter-spacing: -0.01em;
+  color: var(--color-cream);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .sabores__row {
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 0.4rem;
+  }
+  .sabores__price {
+    grid-column: 2;
+    justify-self: start;
   }
 }
 
